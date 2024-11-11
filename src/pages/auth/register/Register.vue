@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <PasspointsCollector class="w-4/12" v-model:image="selectedImage" />
-    <PasspointsCollector class="w-4/12" v-model:image="selectedImage" />
+  <div class="w-2/6">
+    <PasspointsCollector v-model:image="selectedImage" />
+    <PasspointsCollector v-model:image="selectedImage" />
   </div>
 </template>
 
