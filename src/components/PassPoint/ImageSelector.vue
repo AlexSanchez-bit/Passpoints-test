@@ -26,6 +26,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+const props = defineProps<{
+  image: string | null;
+}>();
+const emit = defineEmits<{
+  (e: "update:image", selectedImage: string): void;
+}>();
+
 const products = ref(["disney.jpeg", "cars.jpeg", "japan.jpg"]);
 const responsiveOptions = ref([
   {
@@ -55,5 +62,7 @@ const responsiveOptions = ref([
   },
 ]);
 
-function selectImage(image: string) {}
+function selectImage(image: string) {
+  emit("update:image", image);
+}
 </script>
