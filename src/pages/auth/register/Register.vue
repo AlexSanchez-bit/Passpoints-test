@@ -7,9 +7,30 @@
       </FloatLabel>
       <FloatLabel class="w-full">
         <label for="mail">Mail</label>
-        <Input id="mail" class="w-full" v-model="userMail"></Input>
+        <Input id="mail" type="email" class="w-full" v-model="userMail"></Input>
       </FloatLabel>
-      <Button @click="create">Registrar</Button>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <Checkbox
+            v-model="share_accepted"
+            inputId="share"
+            id="share"
+            binary
+          />
+          <label for="share"> Compartir mis datos </label>
+        </div>
+        <small class="text-zinc-400"
+          >al aceptar sus datos como contraseñas seràn empleados para llevar a
+          cabo un estudio de seguridad sobre este sistema</small
+        >
+      </div>
+      <Button
+        type="button"
+        :disabled="!validForm"
+        label="Registrar"
+        :loading="loading"
+        @click="create"
+      />
     </div>
     <div class="w-full flex flex-col gap-2">
       <div>
@@ -36,8 +57,11 @@
 
 <script setup lang="ts">
 import PasspointsCollector from "../../../components/PassPoint/PasspointCollector.vue";
+
+import InputMask from "primevue/inputmask";
+import Checkbox from "primevue/checkbox";
 import { useToast } from "primevue/usetoast";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { PasswordInfo } from "../../../types/password";
 import { supabase } from "../../../lib/supabase";
 const toast = useToast();
@@ -45,10 +69,13 @@ const toast = useToast();
 const userName = ref<string>(null);
 const userMail = ref<string>(null);
 
+const share_accepted = ref(false);
+
 const password1 = ref<PasswordInfo | null>(null);
 const password2 = ref<PasswordInfo | null>(null);
 
 const selectedImage = ref("");
+const loading = ref(false);
 
 const showError = (message: string) => {
   toast.add({
@@ -58,6 +85,14 @@ const showError = (message: string) => {
     life: 3000,
   });
 };
+
+const validForm = computed<boolean>(() => {
+  return (
+    share_accepted.value &&
+    password1.value?.image.name == password2.value?.image.name &&
+    !(!userName.value || !userMail.value)
+  );
+});
 
 async function create() {
   console.log(password1.value);
@@ -76,6 +111,7 @@ async function create() {
     passwordConfirmation: password2.value,
   };
 
+  loading.value = true;
   try {
     const resp = await supabase.functions.invoke("passpoints-register", {
       body: register_request,
@@ -84,5 +120,6 @@ async function create() {
   } catch (e) {
     console.log(e);
   }
+  loading.value = false;
 }
 </script>
