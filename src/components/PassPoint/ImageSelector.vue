@@ -1,5 +1,5 @@
 <template>
-  <div class="card flex justify-center items-center px-4 max-h-screen py-6">
+  <div class="card flex justify-center items-center px-4 max-h-screen">
     <Carousel
       :value="products"
       :numVisible="3"
@@ -16,6 +16,7 @@
             :src="slotProps.data"
             :alt="slotProps.data"
             class="object-cover w-auto h-auto max-h-96"
+            draggable="false"
           />
         </div>
       </template>
@@ -25,12 +26,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
+import { ImageInfo } from "../../types/password";
 const props = defineProps<{
   image: string | null;
 }>();
 const emit = defineEmits<{
   (e: "update:image", selectedImage: string): void;
+  (e: "update:imageInfo", info: ImageInfo): void;
 }>();
 
 const products = ref(["disney.jpeg", "cars.jpeg", "japan.jpg"]);
@@ -63,6 +65,17 @@ const responsiveOptions = ref([
 ]);
 
 function selectImage(image: string) {
-  emit("update:image", image);
+  const img = new Image();
+  img.src = image; // Obtener la URL de la imagen
+  img.onload = () => {
+    const width = img.naturalWidth; // Obtener el ancho real
+    const height = img.naturalHeight; // Obtener la altura real
+    emit("update:imageInfo", {
+      width,
+      height,
+      name: image.split(".")[0],
+    });
+    emit("update:image", image);
+  };
 }
 </script>

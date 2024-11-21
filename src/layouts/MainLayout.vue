@@ -94,3 +94,13 @@ watch(authenticated, (newv: boolean) => {
   }
 });
 </script>
+
+<style scoped>
+::v-deep .p-menubar {
+  background: black;
+  color: white;
+}
+::v-deep .p-menubar span {
+  color: white;
+}
+</style>
