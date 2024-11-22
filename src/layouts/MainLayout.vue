@@ -13,7 +13,7 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
 
-const { authenticated } = storeToRefs(useAuthStore());
+const { authenticated, user } = storeToRefs(useAuthStore());
 
 const router = useRouter();
 
@@ -37,38 +37,6 @@ const items = reactive([
     },
   },
   {
-    label: "Registro",
-    icon: "pi pi-search",
-    items: [
-      {
-        label: "Components",
-        icon: "pi pi-bolt",
-      },
-      {
-        label: "Blocks",
-        icon: "pi pi-server",
-      },
-      {
-        label: "UI Kit",
-        icon: "pi pi-pencil",
-      },
-      {
-        label: "Templates",
-        icon: "pi pi-palette",
-        items: [
-          {
-            label: "Apollo",
-            icon: "pi pi-palette",
-          },
-          {
-            label: "Ultima",
-            icon: "pi pi-palette",
-          },
-        ],
-      },
-    ],
-  },
-  {
     label: "Contacto",
     icon: "pi pi-envelope",
   },
@@ -76,8 +44,8 @@ const items = reactive([
 
 watch(authenticated, (newv: boolean) => {
   if (newv) {
-    items[1] = {
-      label: "Login",
+    items[3] = {
+      label: user.value.name,
       icon: "pi pi-star",
       command: () => {
         router.push({ name: "login" });
@@ -86,7 +54,7 @@ watch(authenticated, (newv: boolean) => {
   } else {
     items[1] = {
       label: "Login",
-      icon: "pi pi-star",
+      icon: "pi pi-user",
       command: () => {
         router.push({ name: "login" });
       },
@@ -97,10 +65,7 @@ watch(authenticated, (newv: boolean) => {
 
 <style scoped>
 ::v-deep .p-menubar {
-  background: black;
-  color: white;
-}
-::v-deep .p-menubar span {
-  color: white;
+  background: #059669;
+  color: #059669;
 }
 </style>

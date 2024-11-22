@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Note from "./Note.vue";
-import { defineProps, defineEmits, toRefs } from "vue";
+import { defineProps, watch, defineEmits, toRefs } from "vue";
 import MasonryWall from "@yeger/vue-masonry-wall";
 const props = defineProps<{
-  notes: string[];
+  notes: { text: string; color: string; id: number }[];
 }>();
 const { notes } = toRefs(props);
 const emit = defineEmits(["note-delete"]);
@@ -11,8 +11,9 @@ const emit = defineEmits(["note-delete"]);
 const handleDelete = (note: any) => {
   emit("note-delete", note);
 };
-
-const items = [50, 75, 75, 100, 50, 50, 75, 150, 125, 175, 50, 100, 125];
+watch(notes, (val) => {
+  console.log(notes);
+});
 </script>
 
 <template>

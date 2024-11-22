@@ -17,7 +17,7 @@ const handleDelete = () => {
 
 <template>
   <article
-    class="w-full relative truncate transition-all p-4 rounded-md duration-150 ease-out"
+    class="w-full relative truncate transition-all p-4 rounded-md duration-150 ease-out hover:shadow-md cursor-text"
     :style="{ backgroundColor: color }"
   >
     <slot></slot>
