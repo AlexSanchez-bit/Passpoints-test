@@ -16,7 +16,9 @@
     "pinia": "^2.2.6",
     "primeicons": "^7.0.0",
     "primevue": "^4.2.1",
+    "quill": "^2.0.2",
     "vue": "^3.5.12",
+    "vue-masonry-css": "^1.0.3",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {

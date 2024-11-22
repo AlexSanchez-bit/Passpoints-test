@@ -64,7 +64,9 @@ import { useToast } from "primevue/usetoast";
 import { ref, computed } from "vue";
 import { PasswordInfo } from "../../../types/password";
 import { supabase } from "../../../lib/supabase";
+import { useRouter } from "vue-router";
 const toast = useToast();
+const router = useRouter();
 
 const userName = ref<string>(null);
 const userMail = ref<string>(null);
@@ -89,13 +91,13 @@ const showError = (message: string) => {
 const validForm = computed<boolean>(() => {
   return (
     share_accepted.value &&
-    password1.value?.image.name == password2.value?.image.name &&
+    password1.value?.points.length == password2.value?.points.length &&
+    password2.value?.points.length == 5 &&
     !(!userName.value || !userMail.value)
   );
 });
 
 async function create() {
-  console.log(password1.value);
   if (password1.value?.image.name != password2.value?.image.name) {
     showError("Por favor use una sola imagen");
     return;
@@ -113,13 +115,33 @@ async function create() {
 
   loading.value = true;
   try {
-    const resp = await supabase.functions.invoke("passpoints-register", {
-      body: register_request,
-    });
-    console.log(resp);
+    const { data, error } = await supabase.functions.invoke(
+      "passpoints-register",
+      {
+        body: register_request,
+      },
+    );
+    if (data && !data.success) {
+      showError(map_error(data.message));
+    } else {
+      supabase.auth.setSession(data.session);
+      router.push({ name: "notes" });
+    }
   } catch (e) {
     console.log(e);
   }
   loading.value = false;
+}
+
+function map_error(err: string) {
+  if (
+    err ==
+    "Error al registrar en Supabase Auth: A user with this email address has already been registered"
+  ) {
+    return "Ya hay una cuenta para este usuario";
+  }
+  if (err == "Passwords dont Match") {
+    return "Las Contraseñas deben coincidir";
+  }
 }
 </script>

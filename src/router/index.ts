@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "../layouts/MainLayout.vue";
 
 import authroutes from "./auth";
+import noteroutes from "./notes";
 
 const routes = [
   {
@@ -17,6 +18,7 @@ const routes = [
     ],
   },
   ...authroutes,
+  ...noteroutes,
 ];
 
 const router = createRouter({
