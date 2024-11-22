@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, reactive } from "vue";
 import NoteEditor from "./NoteEditor.vue";
 import NotesGrid from "./NotesGrid.vue";
 
@@ -9,18 +9,14 @@ interface Note {
   color: string;
 }
 
-const notes = ref<Note[]>([
-  { id: 1, text: "DemoNote", color: "coral" },
-  { id: 2, text: "You can use Masonry with vanilla JS", color: "aliceblue" },
-  { id: 3, text: "HTML initialization with Masonry", color: "gold" },
-  { id: 4, text: "Masonry v4 backward compatibility", color: "lightpink" },
-  { id: 5, text: "Another note", color: "#C9A39C" },
-]);
+const notes = reactive<Note[]>([]);
 
 onMounted(() => {
   const localNotes = JSON.parse(localStorage.getItem("notes") || "[]");
   if (localNotes) {
-    notes.value = localNotes;
+    localNotes.forEach((note) => {
+      notes.push(note);
+    });
   }
 });
 

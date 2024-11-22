@@ -65,6 +65,7 @@ import { ref, computed } from "vue";
 import { PasswordInfo } from "../../../types/password";
 import { supabase } from "../../../lib/supabase";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../../../stores/auth";
 const toast = useToast();
 const router = useRouter();
 
@@ -115,12 +116,7 @@ async function create() {
 
   loading.value = true;
   try {
-    const { data, error } = await supabase.functions.invoke(
-      "passpoints-register",
-      {
-        body: register_request,
-      },
-    );
+    const { data, error } = useAuthStorage().register(register_request);
     if (data && !data.success) {
       showError(map_error(data.message));
     } else {

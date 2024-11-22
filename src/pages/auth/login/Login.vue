@@ -9,9 +9,9 @@
         class="w-full"
         type="button"
         :disabled="!validForm"
-        label="Registrar"
+        label="Iniciar Sesiòn"
         :loading="loading"
-        @click="create"
+        @click="login"
       />
     </div>
     <div class="w-full flex flex-col gap-2">
@@ -36,6 +36,7 @@ import { ref, computed } from "vue";
 import { PasswordInfo } from "../../../types/password";
 import { supabase } from "../../../lib/supabase";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../../../stores/auth";
 const toast = useToast();
 
 const router = useRouter();
@@ -60,7 +61,7 @@ const validForm = computed<boolean>(() => {
   return password.value?.points.length == 5 && userMail.value;
 });
 
-async function create() {
+async function login() {
   if (!userMail.value) {
     showError("Rellene todos los campos");
     return;
@@ -72,14 +73,11 @@ async function create() {
 
   loading.value = true;
   try {
-    const { data } = await supabase.functions.invoke("passpoints-login", {
-      body: login_request,
-    });
+    const { data } = await useAuthStore().login(login_request);
     console.log(data);
     if (!data || !data.success) {
       showError(map_error(data.message));
     } else {
-      supabase.auth.setSession(data.session);
       router.push({ name: "notes" });
     }
   } catch (e) {
@@ -97,6 +95,9 @@ function map_error(err: string) {
   }
   if (err == "Passwords dont Match") {
     return "Las Contraseñas deben coincidir";
+  }
+  if (err == "Invalid Password" || err == "user not found") {
+    return "Usuario o contraseña incorrectos";
   }
 }
 </script>

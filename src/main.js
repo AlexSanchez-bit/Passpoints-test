@@ -17,12 +17,16 @@ import Menubar from "primevue/menubar";
 import Carousel from "primevue/carousel";
 import Checkbox from "primevue/checkbox";
 /**PrimeVue imports*/
+/**Masonry**/
+import MasonryWall from "@yeger/vue-masonry-wall";
+/**Masonry**/
 
 const pinia = createPinia();
 const app = createApp(App);
 
 app.use(router);
 app.use(pinia);
+app.use(MasonryWall);
 
 app.use(PrimeVue, {
   theme: {

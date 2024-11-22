@@ -11,9 +11,9 @@
 import { reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import { authStore } from "../stores/auth";
+import { useAuthStore } from "../stores/auth";
 
-const { authenticated } = storeToRefs(authStore());
+const { authenticated } = storeToRefs(useAuthStore());
 
 const router = useRouter();
 
