@@ -52,8 +52,7 @@ const handleNoteAdd = async (noteText: string, noteColor: string) => {
 };
 
 const handleNoteDelete = async (note: Note) => {
-  const { error } = await supabase.from("notes").delete().eq("id", note.id);
-  console.log(error);
+  notes.splice(notes.indexOf(note), 1);
 };
 
 const reactive_notes = computed(() => {

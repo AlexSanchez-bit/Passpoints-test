@@ -20,7 +20,7 @@ watch(notes, (val) => {
   <div class="w-full">
     <MasonryWall :items="notes" :ssr-columns="4" :column-width="400" :gap="16">
       <template #default="{ item: note }">
-        <Note :color="note.color">
+        <Note :color="note.color" @delete="handleDelete(note)">
           <div v-html="note.text"></div>
         </Note>
       </template>
