@@ -21,6 +21,9 @@ const items = reactive([
   {
     label: "Principal",
     icon: "pi pi-home",
+    command: () => {
+      router.push({ name: "home" });
+    },
   },
   {
     label: "Login",
@@ -66,6 +69,8 @@ watch(authenticated, (newv: boolean) => {
 <style scoped>
 ::v-deep .p-menubar {
   background: #059669;
-  color: #059669;
+}
+::v-deep .p-menubar-item-label {
+  color: #ffffff;
 }
 </style>

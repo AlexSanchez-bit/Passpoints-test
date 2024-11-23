@@ -3,6 +3,9 @@ const authroutes = [
   {
     path: "/notes",
     component: MainLayout,
+    meta: {
+      required_auth: true,
+    },
     children: [
       {
         path: "",
