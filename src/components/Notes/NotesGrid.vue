@@ -21,7 +21,7 @@ watch(notes, (val) => {
     <MasonryWall :items="notes" :ssr-columns="4" :column-width="400" :gap="16">
       <template #default="{ item: note }">
         <Note :color="note.color" @delete="handleDelete(note)">
-          <div v-html="note.text"></div>
+          <div class="max-h-96 max-w-sm truncate" v-html="note.text"></div>
         </Note>
       </template>
     </MasonryWall>
