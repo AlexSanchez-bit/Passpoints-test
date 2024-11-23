@@ -116,7 +116,7 @@ async function create() {
 
   loading.value = true;
   try {
-    const { data, error } = useAuthStorage().register(register_request);
+    const { data, error } = await useAuthStore().register(register_request);
     if (data && !data.success) {
       showError(map_error(data.message));
     } else {
