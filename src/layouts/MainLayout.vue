@@ -73,4 +73,13 @@ watch(authenticated, (newv: boolean) => {
 ::v-deep .p-menubar-item-label {
   color: #ffffff;
 }
+::v-deep .pi {
+  color: #ffffff;
+}
+::v-deep .p-icon {
+  color: #ffffff;
+}
+::v-deep .p-menubar-mobile .p-menubar-root-list {
+  background: #059669;
+}
 </style>
