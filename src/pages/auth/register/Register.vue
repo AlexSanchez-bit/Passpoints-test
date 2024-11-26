@@ -1,22 +1,20 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:w-3/5">
-    <div class="flex flex-col gap-6 py-6 px-3 items-center md:start-start">
+    <div
+      id="step1"
+      class="flex flex-col gap-6 py-6 px-3 items-center md:start-start"
+    >
       <FloatLabel class="w-full">
-        <label for="name">Name</label>
+        <label for="name">Usuario</label>
         <Input id="name" class="w-full" v-model="userName"></Input>
       </FloatLabel>
       <FloatLabel class="w-full">
-        <label for="mail">Mail</label>
+        <label for="mail">Correo</label>
         <Input id="mail" type="email" class="w-full" v-model="userMail"></Input>
       </FloatLabel>
       <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          <Checkbox
-            v-model="share_accepted"
-            inputId="share"
-            id="share"
-            binary
-          />
+        <div id="step2" class="flex items-center gap-2">
+          <Checkbox v-model="share_accepted" inputId="share" binary />
           <label for="share"> Compartir mis datos </label>
         </div>
         <small class="text-zinc-400"
@@ -32,8 +30,8 @@
         @click="create"
       />
     </div>
-    <div class="w-full flex flex-col gap-2">
-      <div>
+    <div id="step3" class="w-full flex flex-col gap-2">
+      <div id="">
         <label for="passpoints1">Passpoints</label>
         <PasspointsCollector
           id="passpoint1"
@@ -57,7 +55,8 @@
 
 <script setup lang="ts">
 import PasspointsCollector from "../../../components/PassPoint/PasspointCollector.vue";
-
+import { driver, DriveStep } from "driver.js";
+import "driver.js/dist/driver.css";
 import InputMask from "primevue/inputmask";
 import Checkbox from "primevue/checkbox";
 import { useToast } from "primevue/usetoast";
@@ -139,5 +138,150 @@ function map_error(err: string) {
   if (err == "Passwords dont Match") {
     return "Las Contraseñas deben coincidir";
   }
+}
+
+if (localStorage.getItem("register_tutorail") == null) {
+  startTour();
+  localStorage.setItem("register_tutorail", "checked");
+}
+
+function startTour() {
+  const steps = [
+    {
+      popover: {
+        title: "Bienvenido",
+        description:
+          "Este es el registro de su contraseña basada en Passpoints",
+        position: "center",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#step1",
+      popover: {
+        title: "Informaciòn de Usuario",
+        description: "Debe introducir su informaciòn de identificaciòn",
+        position: "bottom",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#step2",
+      popover: {
+        title: "Aceptar compartir sus datos",
+        description:
+          "Al usar este servicio estrà cediendo su contraseña para un estudio acadèmico sobre este sistema, no es recomendable guardar informaciòn sensible",
+        position: "right",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#step3",
+      popover: {
+        title: "Contraseña",
+        description: "Aquì deberà insertar y confirmar su contraseña",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#passpoint1",
+      popover: {
+        title: "Introducir una contraseña",
+        description:
+          "Aquì deberà insertar y confirmar su contraseña,esta consistirà en una selecciòn de 5 puntos donde el orden de estos importa",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#passpoint1 .image-selector",
+      popover: {
+        title: "Cambiar imagen",
+        description:
+          "Aqui puede cambiar la imagen para su contraseña, basta con navegar y dar click en la imagen que desee",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+    },
+    {
+      element: "#passpoint1 .image-change",
+      popover: {
+        title: "selector de imagen",
+        description: "Activa el selector de imagen en caso de querer cambiarla",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+      onHighlightStarted: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.remove("ui");
+      },
+      onDeselected: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.add("ui");
+      },
+    },
+    {
+      element: "#passpoint1 .toggle-show",
+      popover: {
+        title: "Ver puntos",
+        description:
+          "En esta opcion puede hacer que se muestren/oculten los puntos seleccionados",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+      onHighlightStarted: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.remove("ui");
+      },
+      onDeselected: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.add("ui");
+      },
+    },
+    {
+      element: "#passpoint1 .toggle-fullscreen",
+      popover: {
+        title: "Pantalla completa",
+        description: "Ponga el selector a pantalla completa",
+        position: "top",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        doneBtnText: "Finalizar",
+      },
+      onHighlightStarted: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.remove("ui");
+      },
+      onDeselected: (element: Element, step: DriveStep, options: any) => {
+        console.log(element.style, element.dispatchEvent);
+        element.classList.add("ui");
+      },
+    },
+  ];
+  const _driver = driver({
+    showProgress: true,
+    smoothScroll: true,
+    animate: true,
+    steps,
+  });
+
+  _driver.drive();
 }
 </script>

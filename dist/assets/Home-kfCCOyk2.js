@@ -1,4 +1,4 @@
-import{B as M,o,c,m as n,r as d,a as l,b as a,s as I,h as m,_ as z,d as S,F as q,e as B,f as b,u as h,g as f,w as v,i as k,j as P,n as j,t as w}from"./index-CXS17PF9.js";var A=function(s){var t=s.dt;return`
+import{B as M,o,c,m as n,r as d,a as l,b as a,s as I,h as m,_ as z,d as S,F as q,e as B,f as b,u as h,g as f,w as v,i as k,j as P,n as j,t as w}from"./index-Dgwn5dXk.js";var A=function(s){var t=s.dt;return`
 .p-card {
     background: `.concat(t("card.background"),`;
     color: `).concat(t("card.color"),`;

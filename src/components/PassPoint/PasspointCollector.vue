@@ -28,6 +28,7 @@
       </div>
       <div v-else>
         <ImageSelector
+          class="image-selector"
           @update:imageInfo="changeImageInfo"
           :image="image"
           @update:image="changeImage"
@@ -36,20 +37,23 @@
     </transition-group>
     <transition name="bounce"> </transition>
 
-    <div class="absolute ui transition-all duration-300 top-3 left-2">
+    <div
+      class="absolute image-change ui transition-all duration-300 top-3 left-2"
+    >
       <Button
         @click="image = null"
         raised
         rounded
         aria-label="Filter"
         icon="pi pi-window-maximize"
+        class=""
       ></Button>
     </div>
 
     <div></div>
 
     <div
-      class="absolute ui transition-all duration-300 top-2 left-1/2 -translate-x-1/2"
+      class="absolute toggle-show ui transition-all duration-300 top-2 left-1/2 -translate-x-1/2"
     >
       <Button
         @click="showPassword = !showPassword"
@@ -60,7 +64,9 @@
       ></Button>
     </div>
 
-    <div class="absolute ui transition-all duration-300 bottom-3 right-2">
+    <div
+      class="absolute toggle-fullscreen ui transition-all duration-300 bottom-3 right-2"
+    >
       <Button
         @click="toggleFullScreen"
         raised
