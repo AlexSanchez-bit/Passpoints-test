@@ -1,7 +1,7 @@
 <template>
   <main class="min-h-screen">
     <div class="card sticky top-0 z-30">
-      <Menubar :model="items" />
+      <Menubar class="menu" :model="items" />
     </div>
     <router-view></router-view>
   </main>
@@ -73,10 +73,10 @@ watch(authenticated, (newv: boolean) => {
 ::v-deep .p-menubar-item-label {
   color: #ffffff;
 }
-::v-deep .pi {
+::v-deep .menu .pi {
   color: #ffffff;
 }
-::v-deep .p-icon {
+::v-deep .menu .p-icon {
   color: #ffffff;
 }
 ::v-deep .p-menubar-mobile .p-menubar-root-list {
