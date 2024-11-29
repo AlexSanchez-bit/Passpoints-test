@@ -42,6 +42,11 @@ const items = reactive([
   {
     label: "Contacto",
     icon: "pi pi-envelope",
+    children: [
+      {
+        label: "a",
+      },
+    ],
   },
 ]);
 

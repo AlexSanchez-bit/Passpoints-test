@@ -1,12 +1,6 @@
 <template>
-  <div class="relative w-full h-full" ref="imagecontainer">
-    <img
-      :src="image"
-      class="w-full h-full"
-      draggable="false"
-      alt=""
-      @click="selectPoint"
-    />
+  <div @click="selectPoint" class="relative w-full h-full" ref="imagecontainer">
+    <img :src="image" class="w-full h-full" draggable="false" alt="" />
 
     <transition-group name="fade" tag="div">
       <div
@@ -34,7 +28,7 @@
         rounded
         aria-label="Filter"
         icon="pi pi-undo"
-        @click="removeLast"
+        @click.stop="removeLast"
       ></Button>
     </div>
   </div>
