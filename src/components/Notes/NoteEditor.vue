@@ -19,8 +19,14 @@ const handleAdd = () => {
 
 <template>
   <div class="relative max-w-lg">
-    <Editor v-model="text" editorStyle="height: 50vh;font-size:25px" />
-    <div class="absolute bottom-0 right-0 flex flex-row items-center">
+    <Editor
+      v-model="text"
+      editorStyle="height: 50vh;font-size:25px"
+      class="note-editor"
+    />
+    <div
+      class="absolute bottom-0 right-0 flex flex-row items-center color-selector"
+    >
       <InputGroup>
         <InputGroupAddon>
           <ColorPicker v-model="color" />

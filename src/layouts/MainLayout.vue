@@ -8,16 +8,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
 
 const { authenticated, user } = storeToRefs(useAuthStore());
+const { logout } = useAuthStore();
 
 const router = useRouter();
 
-const items = reactive([
+const items = reactive<any[]>([
   {
     label: "Principal",
     icon: "pi pi-home",
@@ -27,45 +28,54 @@ const items = reactive([
   },
   {
     label: "Login",
-    icon: "pi pi-star",
+    icon: "pi pi-user",
     command: () => {
       router.push({ name: "login" });
     },
   },
   {
     label: "Registro",
-    icon: "pi pi-star",
+    icon: "pi pi-user",
     command: () => {
       router.push({ name: "register" });
     },
   },
   {
-    label: "Contacto",
-    icon: "pi pi-envelope",
-    children: [
-      {
-        label: "a",
-      },
-    ],
+    label: "",
   },
 ]);
 
+const closing = ref(false);
+
 watch(authenticated, (newv: boolean) => {
+  console.log(newv);
   if (newv) {
     items[3] = {
       label: user.value.name,
       icon: "pi pi-star",
-      command: () => {
-        router.push({ name: "login" });
-      },
+      items: [
+        {
+          label: "Mis Notas",
+          icon: "pi pi-x-mark",
+          command: () => {
+            router.push({ name: "notes" });
+          },
+        },
+        {
+          label: "Cerrar Sesión",
+          icon: "pi pi-x-mark",
+          command: async () => {
+            closing.value = true;
+            await logout();
+            closing.value = false;
+            router.push({ name: "login" });
+          },
+        },
+      ],
     };
   } else {
-    items[1] = {
-      label: "Login",
-      icon: "pi pi-user",
-      command: () => {
-        router.push({ name: "login" });
-      },
+    items[3] = {
+      label: "",
     };
   }
 });
@@ -73,6 +83,9 @@ watch(authenticated, (newv: boolean) => {
 
 <style scoped>
 ::v-deep .p-menubar {
+  background: #059669;
+}
+::v-deep .p-menubar-item-link {
   background: #059669;
 }
 ::v-deep .p-menubar-item-label {

@@ -5,6 +5,8 @@ import NoteEditor from "./NoteEditor.vue";
 import NotesGrid from "./NotesGrid.vue";
 import { useAuthStore } from "../../stores/auth";
 import { useToast } from "primevue/usetoast";
+import { driver, DriveStep } from "driver.js";
+import "driver.js/dist/driver.css";
 
 interface Note {
   id: number;
@@ -16,6 +18,59 @@ const toast = useToast();
 const { user } = useAuthStore();
 
 const notes = reactive<Note[]>([]);
+
+function start_drive() {
+  if (!localStorage.getItem("notes_tutorial")) {
+    const steps = [
+      {
+        popover: {
+          title: "Tus Notas",
+          description:
+            "En este apartado podrás dejar notas o sugerencias a los desarrolladores, la información que guardes aquí será completamente anónima y solo podrá ser consultada por ti y por el equipo de desarrollo :)",
+          position: "center",
+          nextBtnText: "Siguiente",
+          prevBtnText: "Anterior",
+          doneBtnText: "Finalizar",
+        },
+      },
+      {
+        element: ".note-editor",
+        popover: {
+          title: "Escrbir nota",
+          description:
+            "Desde aqui puedes escribir tu nota incluso dando formato a esta",
+          position: "center",
+          nextBtnText: "Siguiente",
+          prevBtnText: "Anterior",
+          doneBtnText: "Finalizar",
+        },
+      },
+      {
+        element: ".color-selector",
+        popover: {
+          title: "Puedes cambiar el color de fondo a tus notas",
+          description:
+            "En este componente puedes cambiar el color de fondo con el que se visualizaran tus notas",
+          position: "center",
+          nextBtnText: "Siguiente",
+          prevBtnText: "Anterior",
+          doneBtnText: "Finalizar",
+        },
+      },
+    ];
+
+    const _driver = driver({
+      showProgress: true,
+      smoothScroll: true,
+      animate: true,
+      steps,
+    });
+
+    _driver.drive();
+    localStorage.setItem("notes_tutorial", "true");
+  }
+}
+start_drive();
 
 onMounted(async () => {
   for (let i = 0; i < 10; i++) {

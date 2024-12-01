@@ -72,5 +72,10 @@ export const useAuthStore = defineStore("auth", () => {
     return isauth.value;
   });
 
-  return { login, authenticated, user, register };
+  const logout = async () => {
+    await supabase.auth.signOut();
+    isauth.value = false;
+  };
+
+  return { login, authenticated, user, register, logout };
 });
