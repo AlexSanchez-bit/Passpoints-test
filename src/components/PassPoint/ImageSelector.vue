@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { ImageInfo } from "../../types/password";
 const props = defineProps<{
   image: string | null;
@@ -36,6 +36,18 @@ const emit = defineEmits<{
 }>();
 
 const products = ref(["disney.jpeg", "cars.jpeg", "japan.jpg"]);
+onMounted(() => {
+  products.value = shuffle([...products.value]);
+});
+
+function shuffle(array: string[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio entre 0 e i
+    [array[i], array[j]] = [array[j], array[i]]; // Intercambiar elementos
+  }
+  return array;
+}
+
 const responsiveOptions = ref([
   {
     breakpoint: "2400px",

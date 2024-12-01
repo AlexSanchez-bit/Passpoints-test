@@ -5,11 +5,11 @@
     <div class="container mx-auto px-4 py-16">
       <header class="text-center mb-16">
         <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
-          Implementaciòn de un sistema de autenticaciòn gràfica basado en
+          Implementación de un sistema de autenticación gráfica basado en
           Passpoints
         </h1>
         <p class="text-xl text-white opacity-90">
-          Seguro, Intuitivo, y Fàcil de usar
+          Seguro, Intuitivo, y Fácil de usar
         </p>
       </header>
 
@@ -41,7 +41,7 @@
         <Button
           as="a"
           href="https://revistatelematica.cujae.edu.cu/index.php/tele/article/view/970"
-          label="Aprender mas sobre esta implementaciòn"
+          label="Aprender mas sobre esta implementación"
           class="p-button-lg bg-white text-purple-600 hover:bg-purple-100"
         />
         <Button
@@ -71,37 +71,37 @@ const features = ref([
   {
     icon: MousePointer,
     iconColor: "#9333ea", // purple-600
-    title: "Selecciòn Intuitiva",
+    title: "Selección Intuitiva",
     description:
-      "Su contraseña consistirà en una selecciòn de 5 puntos de una imagen donde el ¡ORDEN IMPORTA!",
+      "Su contraseña consistirá en una selección de 5 puntos de una imagen donde el ¡ORDEN IMPORTA!",
   },
   {
     icon: ShieldCheck,
     iconColor: "#16a34a", // green-600
     title: "Mejor Seguridad",
     description:
-      "Passpoints tiene un espacio de contraseñas mayor, por lo que su autenticaciòn serà màs segura sin tener que recordar tediosas y largas contraseñas",
+      "Passpoints tiene un espacio de contraseñas mayor, por lo que su autenticación será más segura sin tener que recordar tediosas y largas contraseñas",
   },
   {
     icon: Zap,
     iconColor: "#ca8a04", // yellow-600
-    title: "Fàcil de recordar",
+    title: "Fácil de recordar",
     description:
-      "Passpoints aprovecha la capacidad de tu cerebro para recordar patrones en imàgenes, por lo que recordar una contraseña una vez registrada serà casi imposible",
+      "Passpoints aprovecha la capacidad de tu cerebro para recordar patrones en imágenes, por lo que recordar una contraseña una vez registrada será casi imposible",
   },
   {
     icon: Fingerprint,
     iconColor: "#2563eb", // blue-600
-    title: "Utilice patrones ùnicos y personalizados",
+    title: "Utilice patrones únicos y personalizados",
     description:
-      "Seleccione los puntos màs sencillos de recordar para usted de la imagen que prefiera",
+      "Seleccione los puntos más sencillos de recordar para usted de la imagen que prefiera",
   },
   {
     icon: Lock,
     iconColor: "#dc2626", // red-600
     title: "Resistente a ataques",
     description:
-      "Passpoints es resistente a ataques comunes en contraseñas alfanumèricas, como ataques de diccionario y fuerza bruta ",
+      "Passpoints es resistente a ataques comunes en contraseñas alfanuméricas, como ataques de diccionario y fuerza bruta ",
   },
 ]);
 </script>
