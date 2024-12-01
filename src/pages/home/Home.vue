@@ -41,7 +41,7 @@
         <Button
           as="a"
           href="https://revistatelematica.cujae.edu.cu/index.php/tele/article/view/970"
-          label="Aprender mas sobre esta implementación"
+          label="Aprender más sobre esta implementación"
           class="p-button-lg bg-white text-purple-600 hover:bg-purple-100"
         />
         <Button
@@ -78,16 +78,16 @@ const features = ref([
   {
     icon: ShieldCheck,
     iconColor: "#16a34a", // green-600
-    title: "Mejor Seguridad",
+    title: "Mayor Seguridad",
     description:
-      "Passpoints tiene un espacio de contraseñas mayor, por lo que su autenticación será más segura sin tener que recordar tediosas y largas contraseñas",
+      "Passpoints tiene un espacio de contraseñas mayor, por lo que su autenticación será más segura que el método tradicional sin tener que recordar tediosas y largas contraseñas",
   },
   {
     icon: Zap,
     iconColor: "#ca8a04", // yellow-600
     title: "Fácil de recordar",
     description:
-      "Passpoints aprovecha la capacidad de tu cerebro para recordar patrones en imágenes, por lo que recordar una contraseña una vez registrada será casi imposible",
+      "Passpoints aprovecha la capacidad humana para recordar patrones en imágenes, por lo que olvidar una contraseña una vez registrada será casi imposible",
   },
   {
     icon: Fingerprint,
@@ -101,7 +101,7 @@ const features = ref([
     iconColor: "#dc2626", // red-600
     title: "Resistente a ataques",
     description:
-      "Passpoints es resistente a ataques comunes en contraseñas alfanuméricas, como ataques de diccionario y fuerza bruta ",
+      "Passpoints ofrece mayor resistencia a ataques comunes en contraseñas alfanuméricas, como ataques de diccionario y fuerza bruta ",
   },
 ]);
 </script>
