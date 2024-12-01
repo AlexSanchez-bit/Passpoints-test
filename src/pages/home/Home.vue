@@ -5,8 +5,8 @@
     <div class="container mx-auto px-4 py-16">
       <header class="text-center mb-16">
         <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
-          Implementación de un sistema de autenticación gráfica basado en
-          Passpoints
+          Implementación del sistema de autenticación gráfica
+          <b class="text-purple-600"> Passpoints </b>
         </h1>
         <p class="text-xl text-white opacity-90">
           Seguro, Intuitivo, y Fácil de usar
