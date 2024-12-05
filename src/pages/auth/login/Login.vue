@@ -78,7 +78,7 @@ async function login() {
     if (!data || !data.success) {
       showError(map_error(data.message));
     } else {
-      router.push({ name: "notes" });
+      router.push({ name: "user-info" });
     }
   } catch (e) {
     console.log(e);

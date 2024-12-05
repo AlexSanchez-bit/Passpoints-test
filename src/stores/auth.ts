@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { supabase } from "../lib/supabase";
 import { isAuthError } from "@supabase/supabase-js";
 
 export const useAuthStore = defineStore("auth", () => {
   const isauth = ref<boolean>(false); /** Inner state of authness **/
   const user = ref<{ id: string; name: string; email: string } | null>(null);
+  const loading = ref<boolean>(true);
 
   try {
     user.value = JSON.parse(localStorage.getItem("user") ?? "null") as {
@@ -15,10 +16,12 @@ export const useAuthStore = defineStore("auth", () => {
     };
   } catch (e) {}
 
-  supabase.auth.getSession().then((val: any) => {
+  supabase.auth.getSession().then(async (val: any) => {
     if (val?.data?.session) {
+      await supabase.auth.setSession(val.data.session);
       isauth.value = true;
     }
+    loading.value = false;
   });
 
   const login = async (login_request: any) => {
@@ -77,5 +80,21 @@ export const useAuthStore = defineStore("auth", () => {
     isauth.value = false;
   };
 
-  return { login, authenticated, user, register, logout };
+  const change_user = async (new_user: any) => {
+    user.value = new_user;
+    localStorage.setItem("user", JSON.stringify(user.value));
+    isauth.value = false;
+    await nextTick();
+    isauth.value = true;
+  };
+
+  return {
+    login,
+    authenticated,
+    user,
+    register,
+    logout,
+    session_loading: loading,
+    change_user,
+  };
 });

@@ -120,7 +120,7 @@ async function create() {
       showError(map_error(data.message));
     } else {
       supabase.auth.setSession(data.session);
-      router.push({ name: "notes" });
+      router.push({ name: "user-info" });
     }
   } catch (e) {
     console.log(e);

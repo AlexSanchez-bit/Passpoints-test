@@ -1,19 +1,30 @@
 <template>
-  <main class="min-h-screen">
+  <main class="min-h-screen relative">
     <div class="card sticky top-0 z-30">
       <Menubar class="menu" :model="items" />
+    </div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 z-20">
+      <ProgressSpinner
+        v-if="session_loading"
+        style="width: 50px; height: 50px"
+        strokeWidth="8"
+        fill="transparent"
+        animationDuration=".5s"
+        aria-label="Custom ProgressSpinner"
+      />
     </div>
     <router-view></router-view>
   </main>
 </template>
 
 <script setup lang="ts">
+import ProgressSpinner from "primevue/progressspinner";
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
 
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { session_loading, authenticated, user } = storeToRefs(useAuthStore());
 const { logout } = useAuthStore();
 
 const router = useRouter();
@@ -48,12 +59,18 @@ const items = reactive<any[]>([
 const closing = ref(false);
 
 watch(authenticated, (newv: boolean) => {
-  console.log(newv);
   if (newv) {
     items[3] = {
       label: user.value.name,
       icon: "pi pi-star",
       items: [
+        {
+          label: "Perfil",
+          icon: "pi pi-x-mark",
+          command: () => {
+            router.push({ name: "user-info" });
+          },
+        },
         {
           label: "Mis Notas",
           icon: "pi pi-x-mark",

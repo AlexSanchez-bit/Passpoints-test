@@ -4,6 +4,7 @@ import { useAuthStore } from "../stores/auth";
 
 import authroutes from "./auth";
 import noteroutes from "./notes";
+import userroutes from "./user";
 
 const routes = [
   {
@@ -20,6 +21,7 @@ const routes = [
   },
   ...authroutes,
   ...noteroutes,
+  ...userroutes,
 ];
 
 const router = createRouter({
