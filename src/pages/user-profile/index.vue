@@ -193,7 +193,10 @@ onMounted(async () => {
     });
   }
 
-  startTour();
+  if (localStorage.getItem("user_info_tutorail") == null) {
+    startTour();
+    localStorage.setItem("user_info_tutorail", "checked");
+  }
 });
 
 function startTour() {
