@@ -18,7 +18,7 @@
           <label for="share"> Compartir mis datos </label>
         </div>
         <small class="text-zinc-400"
-          >al aceptar sus datos como contraseñas seràn empleados para llevar a
+          >al aceptar sus datos como contraseñas serán empleados para llevar a
           cabo un estudio de seguridad sobre este sistema</small
         >
       </div>
@@ -161,8 +161,8 @@ function startTour() {
     {
       element: "#step1",
       popover: {
-        title: "Informaciòn de Usuario",
-        description: "Debe introducir su informaciòn de identificaciòn",
+        title: "Información de Usuario",
+        description: "Debe introducir su información de identificación",
         position: "bottom",
         nextBtnText: "Siguiente",
         prevBtnText: "Anterior",
@@ -174,7 +174,7 @@ function startTour() {
       popover: {
         title: "Aceptar compartir sus datos",
         description:
-          "Al usar este servicio estrà cediendo su contraseña para un estudio acadèmico sobre este sistema, no es recomendable guardar informaciòn sensible",
+          "Al usar este servicio estrá cediendo su contraseña para un estudio académico sobre este sistema, no es recomendable guardar información sensible",
         position: "right",
         nextBtnText: "Siguiente",
         prevBtnText: "Anterior",
@@ -185,7 +185,7 @@ function startTour() {
       element: "#step3",
       popover: {
         title: "Contraseña",
-        description: "Aquì deberà insertar y confirmar su contraseña",
+        description: "Aquí deberá insertar y confirmar su contraseña",
         position: "top",
         nextBtnText: "Siguiente",
         prevBtnText: "Anterior",
@@ -197,7 +197,7 @@ function startTour() {
       popover: {
         title: "Introducir una contraseña",
         description:
-          "Aquì deberà insertar y confirmar su contraseña,esta consistirà en una selecciòn de 5 puntos donde el orden de estos importa",
+          "Aquí deberá insertar y confirmar su contraseña,esta consistirá en una selección de 5 puntos donde el orden de estos importa",
         position: "top",
         nextBtnText: "Siguiente",
         prevBtnText: "Anterior",
