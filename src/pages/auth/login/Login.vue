@@ -3,16 +3,27 @@
     <div class="flex flex-col gap-6 py-6 px-3 items-center md:start-start">
       <FloatLabel class="w-full">
         <label for="mail">Mail</label>
-        <Input id="mail" type="email" class="w-full" v-model="userMail"></Input>
+        <Input
+          @input="touched = true"
+          id="mail"
+          type="email"
+          class="w-full"
+          v-model="userMail"
+        ></Input>
       </FloatLabel>
-      <Button
-        class="w-full"
-        type="button"
-        :disabled="!validForm"
-        label="Iniciar Sesiòn"
-        :loading="loading"
-        @click="login"
-      />
+      <div>
+        <Button
+          class="w-full"
+          type="button"
+          :disabled="!validForm"
+          label="Iniciar Sesión"
+          :loading="loading"
+          @click="login"
+        />
+        <small v-if="touched" class="text-red-400 text-xs">{{
+          errorMessage
+        }}</small>
+      </div>
     </div>
     <div class="w-full flex flex-col gap-2">
       <div>
@@ -34,16 +45,18 @@ import PasspointsCollector from "../../../components/PassPoint/PasspointCollecto
 import { useToast } from "primevue/usetoast";
 import { ref, computed } from "vue";
 import { PasswordInfo } from "../../../types/password";
-import { supabase } from "../../../lib/supabase";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../../stores/auth";
+import { Regex } from "lucide-vue-next";
 const toast = useToast();
+const touched = ref(false);
 
 const router = useRouter();
 
 const userMail = ref<string>(null);
 
 const password = ref<PasswordInfo | null>(null);
+const errorMessage = ref("");
 
 const selectedImage = ref("");
 const loading = ref(false);
@@ -58,7 +71,20 @@ const showError = (message: string) => {
 };
 
 const validForm = computed<boolean>(() => {
-  return password.value?.points.length == 5 && userMail.value;
+  const emailRegex =
+    /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+  if (!userMail.value || !emailRegex.test(userMail.value)) {
+    errorMessage.value = "Introduzca un correo válido";
+  } else if (password.value?.points.length != 5) {
+    errorMessage.value = " La contraseña debe tener 5 puntos";
+  } else {
+    errorMessage.value = "";
+  }
+  return (
+    password.value?.points.length == 5 &&
+    userMail.value &&
+    emailRegex.test(userMail.value)
+  );
 });
 
 async function login() {
@@ -74,7 +100,6 @@ async function login() {
   loading.value = true;
   try {
     const { data } = await useAuthStore().login(login_request);
-    console.log(data);
     if (!data || !data.success) {
       showError(map_error(data.message));
     } else {

@@ -6,15 +6,31 @@
     >
       <FloatLabel class="w-full">
         <label for="name">Usuario</label>
-        <Input id="name" class="w-full" v-model="userName"></Input>
+        <Input
+          @input="touched = true"
+          id="name"
+          class="w-full"
+          v-model="userName"
+        ></Input>
       </FloatLabel>
       <FloatLabel class="w-full">
         <label for="mail">Correo</label>
-        <Input id="mail" type="email" class="w-full" v-model="userMail"></Input>
+        <Input
+          @input="touched = true"
+          id="mail"
+          type="email"
+          class="w-full"
+          v-model="userMail"
+        ></Input>
       </FloatLabel>
       <div class="flex flex-col">
         <div id="step2" class="flex items-center gap-2">
-          <Checkbox v-model="share_accepted" inputId="share" binary />
+          <Checkbox
+            v-model="share_accepted"
+            inputId="share"
+            binary
+            @input="touched = true"
+          />
           <label for="share"> Compartir mis datos </label>
         </div>
         <small class="text-zinc-400"
@@ -22,18 +38,24 @@
           cabo un estudio de seguridad sobre este sistema</small
         >
       </div>
-      <Button
-        type="button"
-        :disabled="!validForm"
-        label="Registrar"
-        :loading="loading"
-        @click="create"
-      />
+      <div class="flex flex-col">
+        <Button
+          type="button"
+          :disabled="!validForm"
+          label="Registrar"
+          :loading="loading"
+          @click="create"
+        />
+        <small v-if="touched" class="text-red-400 text-xs">{{
+          errorMessage
+        }}</small>
+      </div>
     </div>
     <div id="step3" class="w-full flex flex-col gap-2">
       <div id="">
         <label for="passpoints1">Passpoints</label>
         <PasspointsCollector
+          @click="touched = true"
           id="passpoint1"
           @update:image="(e) => (selectedImage = e)"
           :image="selectedImage"
@@ -44,6 +66,7 @@
         <label for="passpoints2">Confirmar Passpoints</label>
         <PasspointsCollector
           id="passpoint2"
+          @click="touched = true"
           :image="selectedImage"
           @update:passpoints="(e) => (password2 = e)"
           @update:image="(e) => (selectedImage = e)"
@@ -71,6 +94,9 @@ const router = useRouter();
 const userName = ref<string>(null);
 const userMail = ref<string>(null);
 
+const errorMessage = ref("");
+const touched = ref(false);
+
 const share_accepted = ref(false);
 
 const password1 = ref<PasswordInfo | null>(null);
@@ -89,11 +115,31 @@ const showError = (message: string) => {
 };
 
 const validForm = computed<boolean>(() => {
+  const emailRegex =
+    /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
+  if (!share_accepted.value) {
+    errorMessage.value = "Debe aceptar compartir sus datos";
+  } else if (password1.value?.points.length != password2.value?.points.length) {
+    errorMessage.value = "Las contraseñas deben ser iguales";
+  } else if (
+    password2.value?.points.length != 5 &&
+    password2.value?.points.length != 5
+  ) {
+    errorMessage.value = "La contraseña debe ser de 5 caracteres";
+  } else if (!emailRegex.test(userMail.value ?? "")) {
+    errorMessage.value = "utilice un correo válido";
+  } else {
+    errorMessage.value = "";
+  }
+
   return (
     share_accepted.value &&
     password1.value?.points.length == password2.value?.points.length &&
     password2.value?.points.length == 5 &&
-    !(!userName.value || !userMail.value)
+    userName.value &&
+    userMail.value &&
+    emailRegex.test(userMail.value ?? "")
   );
 });
 
