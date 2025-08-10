@@ -15,7 +15,7 @@
           <img
             :src="slotProps.data"
             :alt="slotProps.data"
-            class="object-cover w-auto h-auto max-h-96"
+            class="object-cover w-auto h-auto max-h-96 min-w-48 min-h-48"
             draggable="false"
           />
         </div>
