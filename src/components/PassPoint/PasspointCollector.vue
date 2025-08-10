@@ -1,6 +1,6 @@
 <template>
   <div
-    class="justify-center ui-container flex items-center p-3 box-border transition-all duration-500"
+    class="justify-center ui-container flex items-center p-3 box-border transition-all duration-500 min-w-48 min-h-48"
     :class="{
       relative: !fullScreen,
       'w-full': !fullScreen,
