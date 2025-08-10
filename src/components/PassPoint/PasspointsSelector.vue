@@ -1,6 +1,6 @@
 <template>
   <div @click="selectPoint" class="relative w-full h-full" ref="imagecontainer">
-    <img :src="image" class="w-full h-full" draggable="false" alt="" />
+    <img :src="image" class="w-full h-full min-w-48 min-h-48" draggable="false" alt="" />
 
     <transition-group name="fade" tag="div">
       <div
