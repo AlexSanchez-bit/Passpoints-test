@@ -78,10 +78,10 @@ const responsiveOptions = ref([
 
 function selectImage(image: string) {
   const img = new Image();
-  img.src = image; // Obtener la URL de la imagen
+  img.src = image;
   img.onload = () => {
-    const width = img.naturalWidth; // Obtener el ancho real
-    const height = img.naturalHeight; // Obtener la altura real
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
     emit("update:imageInfo", {
       width,
       height,

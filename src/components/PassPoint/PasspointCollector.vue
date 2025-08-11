@@ -91,7 +91,7 @@ const selector = ref();
 
 const passwordInfo = reactive<PasswordInfo>({
   points: [],
-  tolerance: 0.05,
+  tolerance: 0.03,
   image: {
     width: 0,
     height: 0,
@@ -131,6 +131,7 @@ async function toggleFullScreen() {
 
 function changeImageInfo(imageInfo: ImageInfo) {
   passwordInfo.image = imageInfo;
+  passwordInfo.tolerance = Math.min(imageInfo.width,imageInfo.height)*0.03
   emit("update:passpoints", { ...passwordInfo });
 }
 </script>
