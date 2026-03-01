@@ -79,6 +79,25 @@ function selectPoint(event: PointerEvent) {
   emit("update:passpoints", [...indicators]);
 }
 
+function addPoint(x: number, y: number) {
+  if (indicators.length >= 5) return;
+  const { left, top, width, height } =
+    imagecontainer.value.getBoundingClientRect();
+  
+  // Convert screen coordinates to percentage
+  const px = ((x - left) / width) * 100;
+  const py = ((y - top) / height) * 100;
+  
+  if (px >= 0 && px <= 100 && py >= 0 && py <= 100) {
+    indicators.push({ x: px, y: py });
+    emit("update:passpoints", [...indicators]);
+  }
+}
+
+defineExpose({
+  addPoint
+});
+
 const indicatorsSize = ref(0);
 
 const resizeObserver = new ResizeObserver(() => {

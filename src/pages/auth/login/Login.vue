@@ -43,11 +43,12 @@
 import PasspointsCollector from "../../../components/PassPoint/PasspointCollector.vue";
 
 import { useToast } from "primevue/usetoast";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { PasswordInfo } from "../../../types/password";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../../stores/auth";
 import { Regex } from "lucide-vue-next";
+import { initWebGazer, stopWebGazer } from "../../../lib/webgazerService";
 const toast = useToast();
 const touched = ref(false);
 
@@ -60,6 +61,14 @@ const errorMessage = ref("");
 
 const selectedImage = ref("");
 const loading = ref(false);
+
+onMounted(() => {
+  initWebGazer();
+});
+
+onBeforeUnmount(() => {
+  stopWebGazer();
+});
 
 const showError = (message: string) => {
   toast.add({

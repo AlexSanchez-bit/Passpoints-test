@@ -79,15 +79,94 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, toRefs } from "vue";
+import { nextTick, reactive, ref, toRefs, onMounted, onBeforeUnmount, watch } from "vue";
 import ImageSelector from "./ImageSelector.vue";
 import PasspointsSelector from "./PasspointsSelector.vue";
 import { Point, PasswordInfo, ImageInfo } from "../../types/password";
+import { subscribeGaze } from "../../lib/webgazerService";
 
 const fullScreen = ref(false);
 const showPassword = ref(true);
 const points = ref<Point[]>([]);
 const selector = ref();
+
+// Gaze tracking logic
+const lastPrediction = ref<{ x: number, y: number } | null>(null);
+const predictionWindow = ref<{ x: number, y: number }[]>([]);
+let gazeTimer: any = null;
+let samplingTimer: any = null;
+let unsubscribeGaze: (() => void) | null = null;
+
+const setupGazeTracking = () => {
+  unsubscribeGaze = subscribeGaze((data: any) => {
+    if (data) {
+      lastPrediction.value = { x: data.x, y: data.y };
+    }
+  });
+};
+
+const startSampling = () => {
+  if (samplingTimer) return;
+  samplingTimer = setInterval(() => {
+    if (lastPrediction.value) {
+      predictionWindow.value.push({ ...lastPrediction.value });
+      if (predictionWindow.value.length > 8) {
+        predictionWindow.value.shift();
+      }
+    }
+  }, 100);
+
+  gazeTimer = setInterval(() => {
+    if (fullScreen.value && predictionWindow.value.length === 8) {
+      processGazePoints();
+    }
+  }, 800);
+};
+
+const stopSampling = () => {
+  if (samplingTimer) clearInterval(samplingTimer);
+  if (gazeTimer) clearInterval(gazeTimer);
+  samplingTimer = null;
+  gazeTimer = null;
+};
+
+const processGazePoints = () => {
+  const points = predictionWindow.value;
+  if (points.length < 8) return;
+  
+  const avgX = points.reduce((acc, p) => acc + p.x, 0) / points.length;
+  const avgY = points.reduce((acc, p) => acc + p.y, 0) / points.length;
+
+  const maxDist = Math.max(...points.map(p => {
+    return Math.sqrt(Math.pow(p.x - avgX, 2) + Math.pow(p.y - avgY, 2));
+  }));
+
+  const threshold = 50; 
+
+  if (maxDist < threshold) {
+    if (selector.value) {
+      selector.value.addPoint(avgX, avgY);
+    }
+    predictionWindow.value = [];
+  }
+};
+
+onMounted(() => {
+  setupGazeTracking();
+});
+
+onBeforeUnmount(() => {
+  if (unsubscribeGaze) unsubscribeGaze();
+  stopSampling();
+});
+
+watch(fullScreen, (isFull) => {
+  if (isFull) {
+    startSampling();
+  } else {
+    stopSampling();
+  }
+});
 
 const passwordInfo = reactive<PasswordInfo>({
   points: [],
