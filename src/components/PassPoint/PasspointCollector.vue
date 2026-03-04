@@ -19,6 +19,7 @@
       <div v-if="image != null && image != ''">
         <PasspointsSelector
           @update:passpoints="updatePasspoints"
+          @point-selected="handlePointSelected"
           :size="passwordInfo.tolerance"
           :image="image"
           :show="showPassword"
@@ -90,6 +91,9 @@ const showPassword = ref(true);
 const points = ref<Point[]>([]);
 const selector = ref();
 
+// Session data log
+const sessionLog = ref<any[]>([]);
+
 // Gaze tracking logic
 const lastPrediction = ref<{ x: number, y: number } | null>(null);
 const predictionWindow = ref<{ x: number, y: number }[]>([]);
@@ -151,6 +155,76 @@ const processGazePoints = () => {
   }
 };
 
+const handlePointSelected = (data: { clientX: number; clientY: number }) => {
+  if (predictionWindow.value.length === 0) {
+    console.warn("No predictions available in window to calculate error.");
+    return;
+  }
+
+  const selectedX = data.clientX;
+  const selectedY = data.clientY;
+
+  const errors = predictionWindow.value.map((p) => {
+    const dx = selectedX - p.x;
+    const dy = selectedY - p.y;
+    return dx * dx + dy * dy; // Squared Error
+  });
+
+  const mse = errors.reduce((acc, err) => acc + err, 0) / errors.length;
+
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    selectedPoint: { x: selectedX, y: selectedY },
+    predictions: [...predictionWindow.value],
+    squaredErrors: errors,
+    meanSquaredError: mse,
+  };
+
+  sessionLog.value.push(logEntry);
+  console.log("Point data recorded for session:", logEntry);
+};
+
+const saveToLocalFile = () => {
+  if (sessionLog.value.length === 0) {
+    console.log("No data recorded during this session.");
+    return;
+  }
+
+  const exportData = {
+    sessionSummary: {
+      totalPoints: sessionLog.value.length,
+      startTime: sessionLog.value[0].timestamp,
+      endTime: sessionLog.value[sessionLog.value.length - 1].timestamp,
+      webGazerParams: {
+        regression: "ridge",
+        kalmanFilter: {
+          R: 0.01,
+          Q: 0.1,
+          applied: true
+        }
+      }
+    },
+    logs: sessionLog.value
+  };
+
+  const fileName = `session_passpoints_log_${new Date().getTime()}.json`;
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  // Clear session log after saving
+  sessionLog.value = [];
+  console.log("Session data exported and log cleared.");
+};
+
 onMounted(() => {
   setupGazeTracking();
 });
@@ -162,9 +236,11 @@ onBeforeUnmount(() => {
 
 watch(fullScreen, (isFull) => {
   if (isFull) {
+    sessionLog.value = []; // Reset for new session
     startSampling();
   } else {
     stopSampling();
+    saveToLocalFile(); // Download when closing fullscreen
   }
 });
 

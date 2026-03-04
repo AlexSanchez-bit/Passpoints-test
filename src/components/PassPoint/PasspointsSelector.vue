@@ -65,18 +65,20 @@ function removeLast() {
 }
 
 const emit = defineEmits<{
-  (e: "update:passpoints", passpoints: Point[]);
+  (e: "update:passpoints", passpoints: Point[]): void;
+  (e: "point-selected", data: { x: number; y: number; clientX: number; clientY: number }): void;
 }>();
 
 function selectPoint(event: PointerEvent) {
   if (indicators.length >= 5) return;
   const { left, top, width, height } =
     imagecontainer.value.getBoundingClientRect();
-  indicators.push({
-    x: ((event.clientX - left) / width) * 100,
-    y: ((event.clientY - top) / height) * 100,
-  });
+  const x = ((event.clientX - left) / width) * 100;
+  const y = ((event.clientY - top) / height) * 100;
+  
+  indicators.push({ x, y });
   emit("update:passpoints", [...indicators]);
+  emit("point-selected", { x, y, clientX: event.clientX, clientY: event.clientY });
 }
 
 function addPoint(x: number, y: number) {
