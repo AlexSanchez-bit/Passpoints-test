@@ -89,6 +89,7 @@ import { supabase } from "../../../lib/supabase";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../../stores/auth";
 import { initWebGazer, stopWebGazer } from "../../../lib/webgazerService";
+import { validatePasswordStrength } from "../../../lib/passwordStrength";
 const toast = useToast();
 const router = useRouter();
 
@@ -161,6 +162,20 @@ async function create() {
     showError("Rellene todos los campos");
     return;
   }
+
+  if (password1.value) {
+    const strengthCheck = validatePasswordStrength(
+      password1.value.points,
+      password1.value.image.width,
+      password1.value.image.height
+    );
+
+    if (!strengthCheck.isValid) {
+      showError(strengthCheck.error || "La contraseña no cumple con los requisitos de seguridad");
+      return;
+    }
+  }
+
   const register_request = {
     username: userName.value,
     email: userMail.value,
