@@ -1,0 +1,40 @@
+%test para la detección de patrones suaves (DIAG y LINE)
+%xy: array de 5x2 de los pares ordenados de la contraeña
+%alpha: nivel de significación a emplear [0.2, 0.1, 0.05, 0.02, 0.01]
+function [h]=test_patrones_suaves(xy,alpha)
+%sino se especifica, alpha=0.05 por defecto
+if nargin < 2
+    alpha = 0.05;
+end
+if alpha == 0.2
+    percentil = 0.8416;
+elseif alpha == 0.01
+    percentil = 1.2816;
+elseif alpha == 0.05
+    percentil = 1.6449;
+elseif alpha == 0.02
+    percentil = 2.0537;
+elseif alpha == 0.01
+    percentil = 2.3263;
+end
+A=[];
+%hallamos la Triangulación de Delaunay
+t=delaunay(xy(:,1),xy(:,2));
+d=pdist(xy);
+m=squareform(d);
+%hallamos el ángulo máximo, ley de los cosenos
+for i=1:length(t)
+    a1=acos(((m(t(i,1),t(i,3)))^2+(m(t(i,2),t(i,3)))^2-(m(t(i,1),t(i,2))^2))/(2*m(t(i,1),t(i,3))*m(t(i,2),t(i,3))));
+    a2=acos(((m(t(i,1),t(i,2)))^2+(m(t(i,2),t(i,3)))^2-(m(t(i,1),t(i,3))^2))/(2*m(t(i,1),t(i,2))*m(t(i,2),t(i,3))));
+    a3=acos(((m(t(i,1),t(i,2)))^2+(m(t(i,1),t(i,3)))^2-(m(t(i,2),t(i,3))^2))/(2*m(t(i,1),t(i,2))*m(t(i,1),t(i,3))));
+    A=[A,max([a1,a2,a3])*180/pi];
+end
+%se halla el valor del promedio del ángulo máximo en la distribución normal
+%estandarizada.
+Z=(sum(A)/length(t)-111.8)/17.2
+%test de hipótesis h=0 no suave, h=1 patrón suave
+if Z < percentil
+    h=0;
+else
+    h=1;
+end

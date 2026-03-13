@@ -3,9 +3,8 @@ import { KalmanFilter } from "./kalmanFilter";
 let isStarted = false;
 const listeners = new Set<(data: any, elapsedTime: number) => void>();
 
-// Kalman filters for X and Y
-const kalmanX = new KalmanFilter(0.01, 0.1);
-const kalmanY = new KalmanFilter(0.01, 0.1);
+// Kalman filter for smoothing gaze
+const kFilter = new KalmanFilter(0.5, 0.001);
 
 let mouseMoveHandler: ((e: MouseEvent) => void) | null = null;
 
@@ -14,7 +13,7 @@ export const initWebGazer = () => {
     const webgazer = (window as any).webgazer;
     if (!isStarted) {
       webgazer
-        .setRegression("ridge")
+        .setRegression("threadedridge")
         .showVideo(true)
         .showPredictionPoints(true)
         .showFaceOverlay(true)
@@ -23,9 +22,10 @@ export const initWebGazer = () => {
       
       webgazer.setGazeListener((data: any, elapsedTime: number) => {
         if (data) {
-          // Apply Kalman filter
-          data.x = kalmanX.filter(data.x);
-          data.y = kalmanY.filter(data.y);
+          // Apply 2D Kalman filter
+          const smoothed = kFilter.filter(data.x, data.y);
+          data.x = smoothed.x;
+          data.y = smoothed.y;
         }
         listeners.forEach(listener => listener(data, elapsedTime));
       });
@@ -59,7 +59,6 @@ export const stopWebGazer = () => {
     webgazer.end();
     isStarted = false;
     listeners.clear();
-    kalmanX.reset();
-    kalmanY.reset();
+    kFilter.reset();
   }
 };

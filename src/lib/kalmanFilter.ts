@@ -1,46 +1,62 @@
+// @ts-ignore
+import { KalmanFilter as KalmanFilterLib } from 'kalman-filter';
+
 /**
- * A simple 1D Kalman Filter implementation for smoothing values.
+ * A wrapper for the kalman-filter library providing a simple 2D filtering interface.
  */
 export class KalmanFilter {
-  private Q: number; // Process noise covariance
-  private R: number; // Measurement noise covariance
-  private x: number | null = null; // Estimated value
-  private p: number = 1; // Estimation error covariance
-  private k: number = 0; // Kalman gain
+  private kf: any;
+  private lastState: any = null;
 
-  /**
-   * @param Q Process noise (lower = smoother but slower to react)
-   * @param R Measurement noise (higher = more trust in model than measurement)
-   */
-  constructor(Q: number = 0.001, R: number = 0.1) {
-    this.Q = Q;
-    this.R = R;
+  constructor(observationNoise: number = 0.5, processNoise: number = 0.001) {
+    // We must specify 'name: sensor' for the library to use sensorDimension/sensorCovariance
+    // to build the actual covariance and stateProjection matrices.
+    this.kf = new KalmanFilterLib({
+      observation: {
+        name: 'sensor',
+        sensorDimension: 2,
+        sensorCovariance: [
+          [observationNoise, 0],
+          [0, observationNoise]
+        ],
+      },
+      dynamic: {
+        name: 'constant-position',
+        dimension: 2,
+        covariance: [
+          [processNoise, 0],
+          [0, processNoise]
+        ],
+      }
+    });
   }
 
   /**
-   * Updates the filter with a new measurement.
-   * @param measurement The new raw value
-   * @returns The smoothed value
+   * Updates the filter with a new measurement [x, y].
+   * @param x 
+   * @param y 
+   * @returns The smoothed [x, y]
    */
-  filter(measurement: number): number {
-    if (this.x === null) {
-      this.x = measurement;
-      return measurement;
-    }
+  filter(x: number, y: number): { x: number, y: number } {
+    const observation = [x, y];
+    
+    // Online filtering
+    // The library expects an observation as an array
+    this.lastState = this.kf.filter({
+      observation,
+      previousState: this.lastState
+    });
 
-    // Prediction update
-    this.p = this.p + this.Q;
-
-    // Measurement update
-    this.k = this.p / (this.p + this.R);
-    this.x = this.x + this.k * (measurement - this.x);
-    this.p = (1 - this.k) * this.p;
-
-    return this.x;
+    // The state mean in this library is a matrix (column vector)
+    const mean = this.lastState.mean;
+    
+    return {
+      x: Array.isArray(mean[0]) ? mean[0][0] : mean[0],
+      y: Array.isArray(mean[1]) ? mean[1][0] : mean[1]
+    };
   }
 
   reset() {
-    this.x = null;
-    this.p = 1;
+    this.lastState = null;
   }
 }
